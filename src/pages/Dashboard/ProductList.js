@@ -7,7 +7,7 @@ import {
 import { toast } from "react-hot-toast";
 
 const ProductList = () => {
-  const { products, isLoading, deleteSuccess, isError, error } = useSelector(
+  const { products, isLoading, deleteSuccess } = useSelector(
     (state) => state.products
   );
   const dispatch = useDispatch();
