@@ -2,38 +2,41 @@ import React, { useEffect, useState } from "react";
 import ProductCard from "../../components/ProductCard";
 import { useDispatch, useSelector } from "react-redux";
 import { toggle, toggleBrand } from "../../features/filter/filterSlice";
-
+import { useGetProductsQuery } from "../../features/api/apiSlice";
 
 const Home = () => {
   const dispatch = useDispatch();
   // const [products, setProducts] = useState([]);
   const filter = useSelector((state) => state.filter);
   const { stock, brands } = filter;
-  const [products, setProducts] = useState([]);
-  useEffect(() => {
-    fetch("http://localhost:5000/products")
-      .then((res) => res.json())
-      .then((data) => setProducts(data.data));
-  });
-
+  // const [products, setProducts] = useState([]);
   // useEffect(() => {
-  //   dispatch(getProducts());
-  // }, [dispatch]);
+  //   fetch("http://localhost:5000/products")
+  //     .then((res) => res.json())
+  //     .then((data) => setProducts(data.data));
+  // });
+
+  const { data, isLoading, isError } = useGetProductsQuery();
+
+  const products = data?.data;
 
   // * filter and toggle section
   let content;
 
-  // if (isLoading) {
-  //   content = <h1>LOADING.........</h1>;
-  // }
+  if (isLoading) {
+    content = <h1>LOADING.........</h1>;
+  }
+  if (isError) {
+    content = <h1>Some thing Went Wrong</h1>;
+  }
 
-  if (products.length) {
+  if (products?.length) {
     content = products.map((product) => (
       <ProductCard key={product.model} product={product} />
     ));
   }
 
-  if (products.length && (stock || brands.length)) {
+  if (products?.length && (stock || brands?.length)) {
     content = products
       .filter((product) => {
         if (stock) {
@@ -42,7 +45,7 @@ const Home = () => {
         return product;
       })
       .filter((product) => {
-        if (brands.length) {
+        if (brands?.length) {
           return brands.includes(product.brand);
         }
         return products;

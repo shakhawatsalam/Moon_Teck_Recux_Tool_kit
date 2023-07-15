@@ -1,8 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-hot-toast";
+import {
+  useGetProductsQuery,
+  useRemoveProductMutation,
+} from "../../features/api/apiSlice";
 
 const ProductList = () => {
+  const { data, isLoading, isError } = useGetProductsQuery();
+  const [removeProduct] = useRemoveProductMutation();
+
+  const products = data?.data;
   // const { products, isLoading, deleteSuccess } = useSelector(
   //   (state) => state.products
   // );
@@ -22,12 +30,12 @@ const ProductList = () => {
   // if (isLoading) {
   //   return <p>loading.....</p>;
   // }
-  const [products, setProducts] = useState([]);
-  useEffect(() => {
-    fetch("http://localhost:5000/products")
-      .then((res) => res.json())
-      .then((data) => setProducts(data.data));
-  });
+  // const [products, setProducts] = useState([]);
+  // useEffect(() => {
+  //   fetch("http://localhost:5000/products")
+  //     .then((res) => res.json())
+  //     .then((data) => setProducts(data.data));
+  // });
 
   return (
     <div class='flex flex-col justify-center items-center h-full w-full '>
@@ -60,7 +68,7 @@ const ProductList = () => {
             </thead>
 
             <tbody class='text-sm divide-y divide-gray-100'>
-              {products.map(({ model, brand, price, status, _id }) => (
+              {products?.map(({ model, brand, price, status, _id }) => (
                 <tr>
                   <td class='p-2'>
                     <input type='checkbox' class='w-5 h-5' value='id-1' />
@@ -87,7 +95,7 @@ const ProductList = () => {
                   </td>
                   <td class='p-2'>
                     <div class='flex justify-center'>
-                      <button>
+                      <button onClick={() => removeProduct(_id)}>
                         <svg
                           class='w-8 h-8 hover:text-blue-600 rounded-full hover:bg-gray-100 p-1'
                           fill='none'
