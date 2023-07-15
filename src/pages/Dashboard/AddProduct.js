@@ -1,7 +1,10 @@
 import React from "react";
 import { useForm } from "react-hook-form";
+import { useDispatch } from "react-redux";
+import { addProduct } from "../../features/products/productSlice";
 
 const AddProduct = () => {
+  const dispatch = useDispatch();
   const { register, handleSubmit } = useForm();
 
   const submit = (data) => {
@@ -18,7 +21,7 @@ const AddProduct = () => {
       ],
       spec: [],
     };
-
+    dispatch(addProduct(product));
     console.log(product);
   };
 
@@ -26,8 +29,7 @@ const AddProduct = () => {
     <div className='flex justify-center items-center h-full '>
       <form
         className='shadow-lg p-10 rounded-md flex flex-wrap gap-3 max-w-3xl justify-between bg-white'
-        onSubmit={handleSubmit(submit)}
-      >
+        onSubmit={handleSubmit(submit)}>
         <div className='flex flex-col w-full max-w-xs'>
           <label className='mb-2' htmlFor='model'>
             Model
@@ -134,8 +136,7 @@ const AddProduct = () => {
         <div className='flex justify-between items-center w-full'>
           <button
             className=' px-4 py-3 bg-indigo-500 rounded-md font-semibold text-white text-lg disabled:bg-gray-500'
-            type='submit'
-          >
+            type='submit'>
             Submit
           </button>
         </div>
